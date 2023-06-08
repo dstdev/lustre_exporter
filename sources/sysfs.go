@@ -278,9 +278,9 @@ func newLustreSysFsSource() LustreSource {
 		l.generateOSTMetricTemplates(OstEnabled)
 	}
 	//control which node metrics you pull via flags
-	if OstEnabled != disabled {
-		l.generateOSTMetricTemplates(OstEnabled)
-	}
+	// if OstEnabled != disabled {
+	// 	l.generateOSTMetricTemplates(OstEnabled)
+	// }
 	// if MdtEnabled != disabled {
 	// 	l.generateMDTMetricTemplates(MdtEnabled)
 	// }
