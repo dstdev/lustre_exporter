@@ -35,35 +35,35 @@ var (
 	// HealthStatusEnabled specifies whether to collect Health metrics
 	HealthStatusEnabled string
 
-	// OstEnabled specifies whether to collect OST metrics
-	OstEnabled string
-	// MdtEnabled specifies whether to collect MDT metrics
-	MdtEnabled string
-	// MgsEnabled specifies whether to collect MGS metrics
-	MgsEnabled string
-	// MdsEnabled specifies whether to collect MDS metrics
-	MdsEnabled string
-	// ClientEnabled specifies whether to collect Client metrics
-	ClientEnabled string
-	// GenericEnabled specifies whether to collect Generic metrics
-	GenericEnabled string
+	// // OstEnabled specifies whether to collect OST metrics
+	// OstEnabled string
+	// // MdtEnabled specifies whether to collect MDT metrics
+	// MdtEnabled string
+	// // MgsEnabled specifies whether to collect MGS metrics
+	// MgsEnabled string
+	// // MdsEnabled specifies whether to collect MDS metrics
+	// MdsEnabled string
+	// // ClientEnabled specifies whether to collect Client metrics
+	// ClientEnabled string
+	// // GenericEnabled specifies whether to collect Generic metrics
+	// GenericEnabled string
 )
 
-type lustreJobsMetric struct {
-	jobID string
-	lustreStatsMetric
-}
+// type lustreJobsMetric struct {
+// 	jobID string
+// 	lustreStatsMetric
+// }
 
-type lustreBRWMetric struct {
-	size      string
-	operation string
-	value     string
-}
+// type lustreBRWMetric struct {
+// 	size      string
+// 	operation string
+// 	value     string
+// }
 
-type multistatParsingStruct struct {
-	index   int
-	pattern string
-}
+// type multistatParsingStruct struct {
+// 	index   int
+// 	pattern string
+// }
 
 func init() {
 	Factories["sysfs"] = newLustreSysFsSource
@@ -423,46 +423,46 @@ func (s *LustreSysFsSource) Update(ch chan<- prometheus.Metric) (err error) {
 	return nil
 }
 
-func getStatsOperationMetrics(statsFile string, promName string, helpText string) (metricList []lustreStatsMetric, err error) {
-	operationSlice := []multistatParsingStruct{
-		{pattern: "open", index: 1},
-		{pattern: "close", index: 1},
-		{pattern: "getattr", index: 1},
-		{pattern: "setattr", index: 1},
-		{pattern: "getxattr", index: 1},
-		{pattern: "setxattr", index: 1},
-		{pattern: "statfs", index: 1},
-		{pattern: "seek", index: 1},
-		{pattern: "readdir", index: 1},
-		{pattern: "truncate", index: 1},
-		{pattern: "alloc_inode", index: 1},
-		{pattern: "removexattr", index: 1},
-		{pattern: "unlink", index: 1},
-		{pattern: "inode_permission", index: 1},
-		{pattern: "create", index: 1},
-		{pattern: "get_info", index: 1},
-		{pattern: "set_info_async", index: 1},
-		{pattern: "connect", index: 1},
-		{pattern: "ping", index: 1},
-	}
-	for _, operation := range operationSlice {
-		opStat := regexCaptureString(operation.pattern+" .*", statsFile)
-		if len(opStat) < 1 {
-			continue
-		}
-		r, err := regexp.Compile(" +")
-		if err != nil {
-			continue
-		}
-		bytesSplit := r.Split(opStat, -1)
-		result, err := strconv.ParseFloat(bytesSplit[operation.index], 64)
-		if err != nil {
-			return nil, err
-		}
-		metricList = append(metricList, *newLustreStatsMetric(promName, helpText, result, "operation", operation.pattern))
-	}
-	return metricList, nil
-}
+// func getStatsOperationMetrics(statsFile string, promName string, helpText string) (metricList []lustreStatsMetric, err error) {
+// 	operationSlice := []multistatParsingStruct{
+// 		{pattern: "open", index: 1},
+// 		{pattern: "close", index: 1},
+// 		{pattern: "getattr", index: 1},
+// 		{pattern: "setattr", index: 1},
+// 		{pattern: "getxattr", index: 1},
+// 		{pattern: "setxattr", index: 1},
+// 		{pattern: "statfs", index: 1},
+// 		{pattern: "seek", index: 1},
+// 		{pattern: "readdir", index: 1},
+// 		{pattern: "truncate", index: 1},
+// 		{pattern: "alloc_inode", index: 1},
+// 		{pattern: "removexattr", index: 1},
+// 		{pattern: "unlink", index: 1},
+// 		{pattern: "inode_permission", index: 1},
+// 		{pattern: "create", index: 1},
+// 		{pattern: "get_info", index: 1},
+// 		{pattern: "set_info_async", index: 1},
+// 		{pattern: "connect", index: 1},
+// 		{pattern: "ping", index: 1},
+// 	}
+// 	for _, operation := range operationSlice {
+// 		opStat := regexCaptureString(operation.pattern+" .*", statsFile)
+// 		if len(opStat) < 1 {
+// 			continue
+// 		}
+// 		r, err := regexp.Compile(" +")
+// 		if err != nil {
+// 			continue
+// 		}
+// 		bytesSplit := r.Split(opStat, -1)
+// 		result, err := strconv.ParseFloat(bytesSplit[operation.index], 64)
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		metricList = append(metricList, *newLustreStatsMetric(promName, helpText, result, "operation", operation.pattern))
+// 	}
+// 	return metricList, nil
+// }
 
 func getStatsIOMetrics(statsFile string, promName string, helpText string) (metricList []lustreStatsMetric, err error) {
 	// bytesSplit is in the following format:
