@@ -29,50 +29,6 @@ const (
 	// string mappings for 'health_check' values
 	healthCheckHealthy   string = "1"
 	healthCheckUnhealthy string = "0"
-	// Help text dedicated to the 'stats' files
-	//readSamplesHelp  string = "Total number of reads that have been recorded."
-	//readMaximumHelp  string = "The maximum read size in bytes."
-	//readMinimumHelp  string = "The minimum read size in bytes."
-	//readTotalHelp    string = "The total number of bytes that have been read."
-	//writeSamplesHelp string = "Total number of writes that have been recorded."
-	//writeMaximumHelp string = "The maximum write size in bytes."
-	//writeMinimumHelp string = "The minimum write size in bytes."
-	//writeTotalHelp   string = "The total number of bytes that have been written."
-	//jobStatsHelp     string = "Number of operations the filesystem has performed."
-	//statsHelp        string = "Number of operations the filesystem has performed."
-
-	// Help text dedicated to the 'brw_stats' file
-	pagesPerBlockRWHelp    string = "Total number of pages per block RPC."
-	discontiguousPagesHelp string = "Total number of logical discontinuities per RPC."
-	ioTimeHelp             string = "Total time in milliseconds the filesystem has spent processing various object sizes."
-	diskIOSizeHelp         string = "Total number of operations the filesystem has performed for the given size."
-	diskIOsInFlightHelp    string = "Current number of I/O operations that are processing during the snapshot."
-
-	// Help text dedicated to the 'rpc_stats' file
-	pagesPerRPCHelp  string = "Total number of pages per RPC."
-	rpcsInFlightHelp string = "Current number of RPCs that are processing during the snapshot."
-	offsetHelp       string = "Current RPC offset by size."
-
-	// Help text dedicated to the 'encrypt_page_pools' file
-	physicalPagesHelp     string = "Capacity of physical memory."
-	pagesPerPoolHelp      string = "Number of pages per pool."
-	maxPagesHelp          string = "Maximum number of pages that can be held."
-	maxPoolsHelp          string = "Number of pools."
-	totalPagesHelp        string = "Number of pages in all pools."
-	totalFreeHelp         string = "Current number of pages available."
-	maxPagesReachedHelp   string = "Total number of pages reached."
-	growsHelp             string = "Total number of grows."
-	growsFailureHelp      string = "Total number of failures while attempting to add pages."
-	shrinksHelp           string = "Total number of shrinks."
-	cacheAccessHelp       string = "Total number of times cache has been accessed."
-	cacheMissingHelp      string = "Total number of cache misses."
-	lowFreeMarkHelp       string = "Lowest number of free pages reached."
-	maxWaitQueueDepthHelp string = "Maximum waitqueue length."
-	outOfMemHelp          string = "Total number of out of memory requests."
-
-	//repeated strings replaced by constants
-	mdStats          string = "md_stats"
-	encryptPagePools string = "encrypt_page_pools"
 )
 
 var (
