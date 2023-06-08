@@ -281,21 +281,21 @@ func newLustreSysFsSource() LustreSource {
 	if OstEnabled != disabled {
 		l.generateOSTMetricTemplates(OstEnabled)
 	}
-	if MdtEnabled != disabled {
-		l.generateMDTMetricTemplates(MdtEnabled)
-	}
-	if MgsEnabled != disabled {
-		l.generateMGSMetricTemplates(MgsEnabled)
-	}
-	if MdsEnabled != disabled {
-		l.generateMDSMetricTemplates(MdsEnabled)
-	}
-	if ClientEnabled != disabled {
-		l.generateClientMetricTemplates(ClientEnabled)
-	}
-	if GenericEnabled != disabled {
-		l.generateGenericMetricTemplates(GenericEnabled)
-	}
+	// if MdtEnabled != disabled {
+	// 	l.generateMDTMetricTemplates(MdtEnabled)
+	// }
+	// if MgsEnabled != disabled {
+	// 	l.generateMGSMetricTemplates(MgsEnabled)
+	// }
+	// if MdsEnabled != disabled {
+	// 	l.generateMDSMetricTemplates(MdsEnabled)
+	// }
+	// if ClientEnabled != disabled {
+	// 	l.generateClientMetricTemplates(ClientEnabled)
+	// }
+	// if GenericEnabled != disabled {
+	// 	l.generateGenericMetricTemplates(GenericEnabled)
+	// }
 	return &l
 }
 
