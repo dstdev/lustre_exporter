@@ -131,142 +131,142 @@ func (s *LustreSysFsSource) generateOSTMetricTemplates(filter string) {
 	}
 }
 
-// func (s *LustreSysFsSource) generateMDTMetricTemplates(filter string) {
-// 	metricMap := map[string][]lustreHelpStruct{
-// 		"osd-*/*-MDT*": {
-// 			{"blocksize", "blocksize_bytes", "Filesystem block size in bytes", gaugeMetric, false, core},
-// 			{"filesfree", "inodes_free", "The number of inodes (objects) available", gaugeMetric, false, core},
-// 			{"filestotal", "inodes_maximum", "The maximum number of inodes (objects) the filesystem can hold", gaugeMetric, false, core},
-// 			{"kbytesavail", "available_kilobytes", "Number of kilobytes readily available in the pool", gaugeMetric, false, core},
-// 			{"kbytesfree", "free_kilobytes", "Number of kilobytes free in the pool", gaugeMetric, false, core},
-// 			{"kbytestotal", "capacity_kilobytes", "Capacity of the pool in kilobytes", gaugeMetric, false, core},
-// 		},
-// 		"mdt/*": {
-// 			{mdStats, "stats_total", statsHelp, counterMetric, true, core},
-// 			{"num_exports", "exports_total", "Total number of times the pool has been exported", counterMetric, false, core},
-// 			{"job_stats", "job_stats_total", jobStatsHelp, counterMetric, true, core},
-// 		},
-// 	}
-// 	for path := range metricMap {
-// 		for _, item := range metricMap[path] {
-// 			if filter == extended || item.priorityLevel == core {
-// 				newMetric := newLustreProcMetric(item.filename, item.promName, "mdt", path, item.helpText, item.hasMultipleVals, item.metricFunc)
-// 				s.lustreProcMetrics = append(s.lustreProcMetrics, *newMetric)
-// 			}
-// 		}
-// 	}
-// }
+func (s *LustreSysFsSource) generateMDTMetricTemplates(filter string) {
+	metricMap := map[string][]lustreHelpStruct{
+		"osd-*/*-MDT*": {
+			{"blocksize", "blocksize_bytes", "Filesystem block size in bytes", gaugeMetric, false, core},
+			{"filesfree", "inodes_free", "The number of inodes (objects) available", gaugeMetric, false, core},
+			{"filestotal", "inodes_maximum", "The maximum number of inodes (objects) the filesystem can hold", gaugeMetric, false, core},
+			{"kbytesavail", "available_kilobytes", "Number of kilobytes readily available in the pool", gaugeMetric, false, core},
+			{"kbytesfree", "free_kilobytes", "Number of kilobytes free in the pool", gaugeMetric, false, core},
+			{"kbytestotal", "capacity_kilobytes", "Capacity of the pool in kilobytes", gaugeMetric, false, core},
+		},
+		"mdt/*": {
+			{mdStats, "stats_total", statsHelp, counterMetric, true, core},
+			{"num_exports", "exports_total", "Total number of times the pool has been exported", counterMetric, false, core},
+			{"job_stats", "job_stats_total", jobStatsHelp, counterMetric, true, core},
+		},
+	}
+	for path := range metricMap {
+		for _, item := range metricMap[path] {
+			if filter == extended || item.priorityLevel == core {
+				newMetric := newLustreProcMetric(item.filename, item.promName, "mdt", path, item.helpText, item.hasMultipleVals, item.metricFunc)
+				s.lustreProcMetrics = append(s.lustreProcMetrics, *newMetric)
+			}
+		}
+	}
+}
 
-// func (s *LustreSysFsSource) generateMGSMetricTemplates(filter string) {
-// 	metricMap := map[string][]lustreHelpStruct{
-// 		"mgs/MGS/osd/": {
-// 			{"blocksize", "blocksize_bytes", "Filesystem block size in bytes", gaugeMetric, false, core},
-// 			{"filesfree", "inodes_free", "The number of inodes (objects) available", gaugeMetric, false, core},
-// 			{"filestotal", "inodes_maximum", "The maximum number of inodes (objects) the filesystem can hold", gaugeMetric, false, core},
-// 			{"kbytesavail", "available_kilobytes", "Number of kilobytes readily available in the pool", gaugeMetric, false, core},
-// 			{"kbytesfree", "free_kilobytes", "Number of kilobytes free in the pool", gaugeMetric, false, core},
-// 			{"kbytestotal", "capacity_kilobytes", "Capacity of the pool in kilobytes", gaugeMetric, false, core},
-// 		},
-// 	}
-// 	for path := range metricMap {
-// 		for _, item := range metricMap[path] {
-// 			if filter == extended || item.priorityLevel == core {
-// 				newMetric := newLustreProcMetric(item.filename, item.promName, "mgs", path, item.helpText, item.hasMultipleVals, item.metricFunc)
-// 				s.lustreProcMetrics = append(s.lustreProcMetrics, *newMetric)
-// 			}
-// 		}
-// 	}
-// }
+func (s *LustreSysFsSource) generateMGSMetricTemplates(filter string) {
+	metricMap := map[string][]lustreHelpStruct{
+		"mgs/MGS/osd/": {
+			{"blocksize", "blocksize_bytes", "Filesystem block size in bytes", gaugeMetric, false, core},
+			{"filesfree", "inodes_free", "The number of inodes (objects) available", gaugeMetric, false, core},
+			{"filestotal", "inodes_maximum", "The maximum number of inodes (objects) the filesystem can hold", gaugeMetric, false, core},
+			{"kbytesavail", "available_kilobytes", "Number of kilobytes readily available in the pool", gaugeMetric, false, core},
+			{"kbytesfree", "free_kilobytes", "Number of kilobytes free in the pool", gaugeMetric, false, core},
+			{"kbytestotal", "capacity_kilobytes", "Capacity of the pool in kilobytes", gaugeMetric, false, core},
+		},
+	}
+	for path := range metricMap {
+		for _, item := range metricMap[path] {
+			if filter == extended || item.priorityLevel == core {
+				newMetric := newLustreProcMetric(item.filename, item.promName, "mgs", path, item.helpText, item.hasMultipleVals, item.metricFunc)
+				s.lustreProcMetrics = append(s.lustreProcMetrics, *newMetric)
+			}
+		}
+	}
+}
 
-// func (s *LustreSysFsSource) generateMDSMetricTemplates(filter string) {
-// 	metricMap := map[string][]lustreHelpStruct{}
-// 	for path := range metricMap {
-// 		for _, item := range metricMap[path] {
-// 			if filter == extended || item.priorityLevel == core {
-// 				newMetric := newLustreProcMetric(item.filename, item.promName, "mds", path, item.helpText, item.hasMultipleVals, item.metricFunc)
-// 				s.lustreProcMetrics = append(s.lustreProcMetrics, *newMetric)
-// 			}
-// 		}
-// 	}
-// }
+func (s *LustreSysFsSource) generateMDSMetricTemplates(filter string) {
+	metricMap := map[string][]lustreHelpStruct{}
+	for path := range metricMap {
+		for _, item := range metricMap[path] {
+			if filter == extended || item.priorityLevel == core {
+				newMetric := newLustreProcMetric(item.filename, item.promName, "mds", path, item.helpText, item.hasMultipleVals, item.metricFunc)
+				s.lustreProcMetrics = append(s.lustreProcMetrics, *newMetric)
+			}
+		}
+	}
+}
 
-// func (s *LustreSysFsSource) generateClientMetricTemplates(filter string) {
-// 	metricMap := map[string][]lustreHelpStruct{
-// 		"llite/*": {
-// 			{"blocksize", "blocksize_bytes", "Filesystem block size in bytes", gaugeMetric, false, core},
-// 			{"checksum_pages", "checksum_pages_enabled", "Returns '1' if data checksumming is enabled for the client", gaugeMetric, false, extended},
-// 			{"default_easize", "default_ea_size_bytes", "Default Extended Attribute (EA) size in bytes", gaugeMetric, false, extended},
-// 			{"filesfree", "inodes_free", "The number of inodes (objects) available", gaugeMetric, false, core},
-// 			{"filestotal", "inodes_maximum", "The maximum number of inodes (objects) the filesystem can hold", gaugeMetric, false, core},
-// 			{"kbytesavail", "available_kilobytes", "Number of kilobytes readily available in the pool", gaugeMetric, false, core},
-// 			{"kbytesfree", "free_kilobytes", "Number of kilobytes free in the pool", gaugeMetric, false, core},
-// 			{"kbytestotal", "capacity_kilobytes", "Capacity of the pool in kilobytes", gaugeMetric, false, core},
-// 			{"lazystatfs", "lazystatfs_enabled", "Returns '1' if lazystatfs (a non-blocking alternative to statfs) is enabled for the client", gaugeMetric, false, extended},
-// 			{"max_easize", "maximum_ea_size_bytes", "Maximum Extended Attribute (EA) size in bytes", gaugeMetric, false, extended},
-// 			{"max_read_ahead_mb", "maximum_read_ahead_megabytes", "Maximum number of megabytes to read ahead", gaugeMetric, false, extended},
-// 			{"max_read_ahead_per_file_mb", "maximum_read_ahead_per_file_megabytes", "Maximum number of megabytes per file to read ahead", gaugeMetric, false, extended},
-// 			{"max_read_ahead_whole_mb", "maximum_read_ahead_whole_megabytes", "Maximum file size in megabytes for a file to be read in its entirety", gaugeMetric, false, extended},
-// 			{"statahead_agl", "statahead_agl_enabled", "Returns '1' if the Asynchronous Glimpse Lock (AGL) for statahead is enabled", gaugeMetric, false, extended},
-// 			{"statahead_max", "statahead_maximum", "Maximum window size for statahead", gaugeMetric, false, extended},
-// 			{"stats", "read_samples_total", readSamplesHelp, counterMetric, false, core},
-// 			{"stats", "read_minimum_size_bytes", readMinimumHelp, gaugeMetric, false, extended},
-// 			{"stats", "read_maximum_size_bytes", readMaximumHelp, gaugeMetric, false, extended},
-// 			{"stats", "read_bytes_total", readTotalHelp, counterMetric, false, core},
-// 			{"stats", "write_samples_total", writeSamplesHelp, counterMetric, false, core},
-// 			{"stats", "write_minimum_size_bytes", writeMinimumHelp, gaugeMetric, false, extended},
-// 			{"stats", "write_maximum_size_bytes", writeMaximumHelp, gaugeMetric, false, extended},
-// 			{"stats", "write_bytes_total", writeTotalHelp, counterMetric, false, core},
-// 			{"stats", "stats_total", statsHelp, counterMetric, true, core},
-// 			{"xattr_cache", "xattr_cache_enabled", "Returns '1' if extended attribute cache is enabled", gaugeMetric, false, extended},
-// 		},
-// 		"mdc/*": {
-// 			{"rpc_stats", "rpcs_in_flight", rpcsInFlightHelp, gaugeMetric, true, core},
-// 		},
-// 		"osc/*": {
-// 			{"rpc_stats", "pages_per_rpc_total", pagesPerRPCHelp, counterMetric, false, core},
-// 			{"rpc_stats", "rpcs_in_flight", rpcsInFlightHelp, gaugeMetric, true, core},
-// 			{"rpc_stats", "rpcs_offset", offsetHelp, gaugeMetric, false, core},
-// 		},
-// 	}
-// 	for path := range metricMap {
-// 		for _, item := range metricMap[path] {
-// 			if filter == extended || item.priorityLevel == core {
-// 				newMetric := newLustreProcMetric(item.filename, item.promName, "client", path, item.helpText, item.hasMultipleVals, item.metricFunc)
-// 				s.lustreProcMetrics = append(s.lustreProcMetrics, *newMetric)
-// 			}
-// 		}
-// 	}
-// }
+func (s *LustreSysFsSource) generateClientMetricTemplates(filter string) {
+	metricMap := map[string][]lustreHelpStruct{
+		"llite/*": {
+			{"blocksize", "blocksize_bytes", "Filesystem block size in bytes", gaugeMetric, false, core},
+			{"checksum_pages", "checksum_pages_enabled", "Returns '1' if data checksumming is enabled for the client", gaugeMetric, false, extended},
+			{"default_easize", "default_ea_size_bytes", "Default Extended Attribute (EA) size in bytes", gaugeMetric, false, extended},
+			{"filesfree", "inodes_free", "The number of inodes (objects) available", gaugeMetric, false, core},
+			{"filestotal", "inodes_maximum", "The maximum number of inodes (objects) the filesystem can hold", gaugeMetric, false, core},
+			{"kbytesavail", "available_kilobytes", "Number of kilobytes readily available in the pool", gaugeMetric, false, core},
+			{"kbytesfree", "free_kilobytes", "Number of kilobytes free in the pool", gaugeMetric, false, core},
+			{"kbytestotal", "capacity_kilobytes", "Capacity of the pool in kilobytes", gaugeMetric, false, core},
+			{"lazystatfs", "lazystatfs_enabled", "Returns '1' if lazystatfs (a non-blocking alternative to statfs) is enabled for the client", gaugeMetric, false, extended},
+			{"max_easize", "maximum_ea_size_bytes", "Maximum Extended Attribute (EA) size in bytes", gaugeMetric, false, extended},
+			{"max_read_ahead_mb", "maximum_read_ahead_megabytes", "Maximum number of megabytes to read ahead", gaugeMetric, false, extended},
+			{"max_read_ahead_per_file_mb", "maximum_read_ahead_per_file_megabytes", "Maximum number of megabytes per file to read ahead", gaugeMetric, false, extended},
+			{"max_read_ahead_whole_mb", "maximum_read_ahead_whole_megabytes", "Maximum file size in megabytes for a file to be read in its entirety", gaugeMetric, false, extended},
+			{"statahead_agl", "statahead_agl_enabled", "Returns '1' if the Asynchronous Glimpse Lock (AGL) for statahead is enabled", gaugeMetric, false, extended},
+			{"statahead_max", "statahead_maximum", "Maximum window size for statahead", gaugeMetric, false, extended},
+			{"stats", "read_samples_total", readSamplesHelp, counterMetric, false, core},
+			{"stats", "read_minimum_size_bytes", readMinimumHelp, gaugeMetric, false, extended},
+			{"stats", "read_maximum_size_bytes", readMaximumHelp, gaugeMetric, false, extended},
+			{"stats", "read_bytes_total", readTotalHelp, counterMetric, false, core},
+			{"stats", "write_samples_total", writeSamplesHelp, counterMetric, false, core},
+			{"stats", "write_minimum_size_bytes", writeMinimumHelp, gaugeMetric, false, extended},
+			{"stats", "write_maximum_size_bytes", writeMaximumHelp, gaugeMetric, false, extended},
+			{"stats", "write_bytes_total", writeTotalHelp, counterMetric, false, core},
+			{"stats", "stats_total", statsHelp, counterMetric, true, core},
+			{"xattr_cache", "xattr_cache_enabled", "Returns '1' if extended attribute cache is enabled", gaugeMetric, false, extended},
+		},
+		"mdc/*": {
+			{"rpc_stats", "rpcs_in_flight", rpcsInFlightHelp, gaugeMetric, true, core},
+		},
+		"osc/*": {
+			{"rpc_stats", "pages_per_rpc_total", pagesPerRPCHelp, counterMetric, false, core},
+			{"rpc_stats", "rpcs_in_flight", rpcsInFlightHelp, gaugeMetric, true, core},
+			{"rpc_stats", "rpcs_offset", offsetHelp, gaugeMetric, false, core},
+		},
+	}
+	for path := range metricMap {
+		for _, item := range metricMap[path] {
+			if filter == extended || item.priorityLevel == core {
+				newMetric := newLustreProcMetric(item.filename, item.promName, "client", path, item.helpText, item.hasMultipleVals, item.metricFunc)
+				s.lustreProcMetrics = append(s.lustreProcMetrics, *newMetric)
+			}
+		}
+	}
+}
 
-// func (s *LustreSysFsSource) generateGenericMetricTemplates(filter string) {
-// 	metricMap := map[string][]lustreHelpStruct{
-// 		"sptlrpc": {
-// 			{"encrypt_page_pools", "physical_pages", physicalPagesHelp, gaugeMetric, false, extended},
-// 			{"encrypt_page_pools", "pages_per_pool", pagesPerPoolHelp, gaugeMetric, false, extended},
-// 			{"encrypt_page_pools", "maximum_pages", maxPagesHelp, gaugeMetric, false, extended},
-// 			{"encrypt_page_pools", "maximum_pools", maxPoolsHelp, gaugeMetric, false, extended},
-// 			{"encrypt_page_pools", "pages_in_pools", totalPagesHelp, gaugeMetric, false, extended},
-// 			{"encrypt_page_pools", "free_pages", totalFreeHelp, gaugeMetric, false, extended},
-// 			{"encrypt_page_pools", "maximum_pages_reached_total", maxPagesReachedHelp, counterMetric, false, extended},
-// 			{"encrypt_page_pools", "grows_total", growsHelp, counterMetric, false, extended},
-// 			{"encrypt_page_pools", "grows_failure_total", growsFailureHelp, counterMetric, false, extended},
-// 			{"encrypt_page_pools", "shrinks_total", shrinksHelp, counterMetric, false, extended},
-// 			{"encrypt_page_pools", "cache_access_total", cacheAccessHelp, counterMetric, false, extended},
-// 			{"encrypt_page_pools", "cache_miss_total", cacheMissingHelp, counterMetric, false, extended},
-// 			{"encrypt_page_pools", "free_page_low", lowFreeMarkHelp, gaugeMetric, false, extended},
-// 			{"encrypt_page_pools", "maximum_waitqueue_depth", maxWaitQueueDepthHelp, gaugeMetric, false, extended},
-// 			{"encrypt_page_pools", "out_of_memory_request_total", outOfMemHelp, counterMetric, false, extended},
-// 		},
-// 	}
-// 	for path := range metricMap {
-// 		for _, item := range metricMap[path] {
-// 			if filter == extended || item.priorityLevel == core {
-// 				newMetric := newLustreProcMetric(item.filename, item.promName, "generic", path, item.helpText, item.hasMultipleVals, item.metricFunc)
-// 				s.lustreProcMetrics = append(s.lustreProcMetrics, *newMetric)
-// 			}
-// 		}
-// 	}
-// }
+func (s *LustreSysFsSource) generateGenericMetricTemplates(filter string) {
+	metricMap := map[string][]lustreHelpStruct{
+		"sptlrpc": {
+			{"encrypt_page_pools", "physical_pages", physicalPagesHelp, gaugeMetric, false, extended},
+			{"encrypt_page_pools", "pages_per_pool", pagesPerPoolHelp, gaugeMetric, false, extended},
+			{"encrypt_page_pools", "maximum_pages", maxPagesHelp, gaugeMetric, false, extended},
+			{"encrypt_page_pools", "maximum_pools", maxPoolsHelp, gaugeMetric, false, extended},
+			{"encrypt_page_pools", "pages_in_pools", totalPagesHelp, gaugeMetric, false, extended},
+			{"encrypt_page_pools", "free_pages", totalFreeHelp, gaugeMetric, false, extended},
+			{"encrypt_page_pools", "maximum_pages_reached_total", maxPagesReachedHelp, counterMetric, false, extended},
+			{"encrypt_page_pools", "grows_total", growsHelp, counterMetric, false, extended},
+			{"encrypt_page_pools", "grows_failure_total", growsFailureHelp, counterMetric, false, extended},
+			{"encrypt_page_pools", "shrinks_total", shrinksHelp, counterMetric, false, extended},
+			{"encrypt_page_pools", "cache_access_total", cacheAccessHelp, counterMetric, false, extended},
+			{"encrypt_page_pools", "cache_miss_total", cacheMissingHelp, counterMetric, false, extended},
+			{"encrypt_page_pools", "free_page_low", lowFreeMarkHelp, gaugeMetric, false, extended},
+			{"encrypt_page_pools", "maximum_waitqueue_depth", maxWaitQueueDepthHelp, gaugeMetric, false, extended},
+			{"encrypt_page_pools", "out_of_memory_request_total", outOfMemHelp, counterMetric, false, extended},
+		},
+	}
+	for path := range metricMap {
+		for _, item := range metricMap[path] {
+			if filter == extended || item.priorityLevel == core {
+				newMetric := newLustreProcMetric(item.filename, item.promName, "generic", path, item.helpText, item.hasMultipleVals, item.metricFunc)
+				s.lustreProcMetrics = append(s.lustreProcMetrics, *newMetric)
+			}
+		}
+	}
+}
 
 func newLustreSysFsSource() LustreSource {
 	var l LustreSysFsSource
@@ -278,24 +278,22 @@ func newLustreSysFsSource() LustreSource {
 		l.generateOSTMetricTemplates(OstEnabled)
 	}
 	//control which node metrics you pull via flags
-	// if OstEnabled != disabled {
-	// 	l.generateOSTMetricTemplates(OstEnabled)
-	// }
-	// if MdtEnabled != disabled {
-	// 	l.generateMDTMetricTemplates(MdtEnabled)
-	// }
-	// if MgsEnabled != disabled {
-	// 	l.generateMGSMetricTemplates(MgsEnabled)
-	// }
-	// if MdsEnabled != disabled {
-	// 	l.generateMDSMetricTemplates(MdsEnabled)
-	// }
-	// if ClientEnabled != disabled {
-	// 	l.generateClientMetricTemplates(ClientEnabled)
-	// }
-	// if GenericEnabled != disabled {
-	// 	l.generateGenericMetricTemplates(GenericEnabled)
-	// }
+
+	if MdtEnabled != disabled {
+		l.generateMDTMetricTemplates(MdtEnabled)
+	}
+	if MgsEnabled != disabled {
+		l.generateMGSMetricTemplates(MgsEnabled)
+	}
+	if MdsEnabled != disabled {
+		l.generateMDSMetricTemplates(MdsEnabled)
+	}
+	if ClientEnabled != disabled {
+		l.generateClientMetricTemplates(ClientEnabled)
+	}
+	if GenericEnabled != disabled {
+		l.generateGenericMetricTemplates(GenericEnabled)
+	}
 	return &l
 }
 
