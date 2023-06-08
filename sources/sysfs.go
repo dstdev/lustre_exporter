@@ -14,15 +14,12 @@
 package sources
 
 import (
-	"errors"
 	"io/ioutil"
 	"path/filepath"
-	"regexp"
 	"strconv"
 	"strings"
 
 	"github.com/prometheus/client_golang/prometheus"
-	log "github.com/sirupsen/logrus"
 )
 
 const (
@@ -464,225 +461,225 @@ func (s *LustreSysFsSource) Update(ch chan<- prometheus.Metric) (err error) {
 // 	return metricList, nil
 // }
 
-func getStatsIOMetrics(statsFile string, promName string, helpText string) (metricList []lustreStatsMetric, err error) {
-	// bytesSplit is in the following format:
-	// bytesString: {name} {number of samples} 'samples' [{units}] {minimum} {maximum} {sum}
-	// bytesSplit:   [0]    [1]                 [2]       [3]       [4]       [5]       [6]
-	bytesMap := map[string]multistatParsingStruct{
-		readSamplesHelp:       {pattern: "read_bytes .*", index: 1},
-		readMinimumHelp:       {pattern: "read_bytes .*", index: 4},
-		readMaximumHelp:       {pattern: "read_bytes .*", index: 5},
-		readTotalHelp:         {pattern: "read_bytes .*", index: 6},
-		writeSamplesHelp:      {pattern: "write_bytes .*", index: 1},
-		writeMinimumHelp:      {pattern: "write_bytes .*", index: 4},
-		writeMaximumHelp:      {pattern: "write_bytes .*", index: 5},
-		writeTotalHelp:        {pattern: "write_bytes .*", index: 6},
-		physicalPagesHelp:     {pattern: "physical pages: .*", index: 2},
-		pagesPerPoolHelp:      {pattern: "pages per pool: .*", index: 3},
-		maxPagesHelp:          {pattern: "max pages: .*", index: 2},
-		maxPoolsHelp:          {pattern: "max pools: .*", index: 2},
-		totalPagesHelp:        {pattern: "total pages: .*", index: 2},
-		totalFreeHelp:         {pattern: "total free: .*", index: 2},
-		maxPagesReachedHelp:   {pattern: "max pages reached: .*", index: 3},
-		growsHelp:             {pattern: "grows: .*", index: 1},
-		growsFailureHelp:      {pattern: "grows failure: .*", index: 2},
-		shrinksHelp:           {pattern: "shrinks: .*", index: 1},
-		cacheAccessHelp:       {pattern: "cache access: .*", index: 2},
-		cacheMissingHelp:      {pattern: "cache missing: .*", index: 2},
-		lowFreeMarkHelp:       {pattern: "low free mark: .*", index: 3},
-		maxWaitQueueDepthHelp: {pattern: "max waitqueue depth: .*", index: 3},
-		outOfMemHelp:          {pattern: "out of mem: .*", index: 3},
-	}
-	pattern := bytesMap[helpText].pattern
-	bytesString := regexCaptureString(pattern, statsFile)
-	if len(bytesString) < 1 {
-		return nil, nil
-	}
-	r, err := regexp.Compile(" +")
-	if err != nil {
-		return nil, err
-	}
-	bytesSplit := r.Split(bytesString, -1)
-	result, err := strconv.ParseFloat(bytesSplit[bytesMap[helpText].index], 64)
-	if err != nil {
-		return nil, err
-	}
-	metricList = append(metricList, *newLustreStatsMetric(promName, helpText, result, "", ""))
+// func getStatsIOMetrics(statsFile string, promName string, helpText string) (metricList []lustreStatsMetric, err error) {
+// 	// bytesSplit is in the following format:
+// 	// bytesString: {name} {number of samples} 'samples' [{units}] {minimum} {maximum} {sum}
+// 	// bytesSplit:   [0]    [1]                 [2]       [3]       [4]       [5]       [6]
+// 	bytesMap := map[string]multistatParsingStruct{
+// 		readSamplesHelp:       {pattern: "read_bytes .*", index: 1},
+// 		readMinimumHelp:       {pattern: "read_bytes .*", index: 4},
+// 		readMaximumHelp:       {pattern: "read_bytes .*", index: 5},
+// 		readTotalHelp:         {pattern: "read_bytes .*", index: 6},
+// 		writeSamplesHelp:      {pattern: "write_bytes .*", index: 1},
+// 		writeMinimumHelp:      {pattern: "write_bytes .*", index: 4},
+// 		writeMaximumHelp:      {pattern: "write_bytes .*", index: 5},
+// 		writeTotalHelp:        {pattern: "write_bytes .*", index: 6},
+// 		physicalPagesHelp:     {pattern: "physical pages: .*", index: 2},
+// 		pagesPerPoolHelp:      {pattern: "pages per pool: .*", index: 3},
+// 		maxPagesHelp:          {pattern: "max pages: .*", index: 2},
+// 		maxPoolsHelp:          {pattern: "max pools: .*", index: 2},
+// 		totalPagesHelp:        {pattern: "total pages: .*", index: 2},
+// 		totalFreeHelp:         {pattern: "total free: .*", index: 2},
+// 		maxPagesReachedHelp:   {pattern: "max pages reached: .*", index: 3},
+// 		growsHelp:             {pattern: "grows: .*", index: 1},
+// 		growsFailureHelp:      {pattern: "grows failure: .*", index: 2},
+// 		shrinksHelp:           {pattern: "shrinks: .*", index: 1},
+// 		cacheAccessHelp:       {pattern: "cache access: .*", index: 2},
+// 		cacheMissingHelp:      {pattern: "cache missing: .*", index: 2},
+// 		lowFreeMarkHelp:       {pattern: "low free mark: .*", index: 3},
+// 		maxWaitQueueDepthHelp: {pattern: "max waitqueue depth: .*", index: 3},
+// 		outOfMemHelp:          {pattern: "out of mem: .*", index: 3},
+// 	}
+// 	pattern := bytesMap[helpText].pattern
+// 	bytesString := regexCaptureString(pattern, statsFile)
+// 	if len(bytesString) < 1 {
+// 		return nil, nil
+// 	}
+// 	r, err := regexp.Compile(" +")
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	bytesSplit := r.Split(bytesString, -1)
+// 	result, err := strconv.ParseFloat(bytesSplit[bytesMap[helpText].index], 64)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	metricList = append(metricList, *newLustreStatsMetric(promName, helpText, result, "", ""))
 
-	return metricList, nil
-}
+// 	return metricList, nil
+// }
 
-func splitBRWStats(statBlock string) (metricList []lustreBRWMetric, err error) {
-	if len(statBlock) == 0 || statBlock == "" {
-		return nil, nil
-	}
+// func splitBRWStats(statBlock string) (metricList []lustreBRWMetric, err error) {
+// 	if len(statBlock) == 0 || statBlock == "" {
+// 		return nil, nil
+// 	}
 
-	// Skip the first line of text as it doesn't contain any metrics
-	for _, line := range strings.Split(statBlock, "\n")[1:] {
-		if len(line) > 1 {
-			fields := strings.Fields(line)
-			// Lines are in the following format:
-			// [size] [# read RPCs] [relative read size (%)] [cumulative read size (%)] | [# write RPCs] [relative write size (%)] [cumulative write size (%)]
-			// [0]    [1]           [2]                      [3]                       [4] [5]           [6]                       [7]
-			if len(fields) >= 6 {
-				size, readRPCs, writeRPCs := fields[0], fields[1], fields[5]
-				size = strings.Replace(size, ":", "", -1)
-				metricList = append(metricList, lustreBRWMetric{size: size, operation: "read", value: readRPCs})
-				metricList = append(metricList, lustreBRWMetric{size: size, operation: "write", value: writeRPCs})
-			} else if len(fields) >= 1 {
-				size, rpcs := fields[0], fields[1]
-				size = strings.Replace(size, ":", "", -1)
-				metricList = append(metricList, lustreBRWMetric{size: size, operation: "read", value: rpcs})
-			} else {
-				continue
-			}
-		}
-	}
-	return metricList, nil
-}
+// 	// Skip the first line of text as it doesn't contain any metrics
+// 	for _, line := range strings.Split(statBlock, "\n")[1:] {
+// 		if len(line) > 1 {
+// 			fields := strings.Fields(line)
+// 			// Lines are in the following format:
+// 			// [size] [# read RPCs] [relative read size (%)] [cumulative read size (%)] | [# write RPCs] [relative write size (%)] [cumulative write size (%)]
+// 			// [0]    [1]           [2]                      [3]                       [4] [5]           [6]                       [7]
+// 			if len(fields) >= 6 {
+// 				size, readRPCs, writeRPCs := fields[0], fields[1], fields[5]
+// 				size = strings.Replace(size, ":", "", -1)
+// 				metricList = append(metricList, lustreBRWMetric{size: size, operation: "read", value: readRPCs})
+// 				metricList = append(metricList, lustreBRWMetric{size: size, operation: "write", value: writeRPCs})
+// 			} else if len(fields) >= 1 {
+// 				size, rpcs := fields[0], fields[1]
+// 				size = strings.Replace(size, ":", "", -1)
+// 				metricList = append(metricList, lustreBRWMetric{size: size, operation: "read", value: rpcs})
+// 			} else {
+// 				continue
+// 			}
+// 		}
+// 	}
+// 	return metricList, nil
+// }
 
-func parseStatsFile(helpText string, promName string, path string, hasMultipleVals bool) (metricList []lustreStatsMetric, err error) {
-	statsFileBytes, err := ioutil.ReadFile(filepath.Clean(path))
-	if err != nil {
-		return nil, err
-	}
-	statsFile := string(statsFileBytes[:])
-	var statsList []lustreStatsMetric
-	if hasMultipleVals {
-		statsList, err = getStatsOperationMetrics(statsFile, promName, helpText)
-	} else {
-		statsList, err = getStatsIOMetrics(statsFile, promName, helpText)
-	}
-	if err != nil {
-		return nil, err
-	}
-	if statsList != nil {
-		metricList = append(metricList, statsList...)
-	}
+// func parseStatsFile(helpText string, promName string, path string, hasMultipleVals bool) (metricList []lustreStatsMetric, err error) {
+// 	statsFileBytes, err := ioutil.ReadFile(filepath.Clean(path))
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	statsFile := string(statsFileBytes[:])
+// 	var statsList []lustreStatsMetric
+// 	if hasMultipleVals {
+// 		statsList, err = getStatsOperationMetrics(statsFile, promName, helpText)
+// 	} else {
+// 		statsList, err = getStatsIOMetrics(statsFile, promName, helpText)
+// 	}
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	if statsList != nil {
+// 		metricList = append(metricList, statsList...)
+// 	}
 
-	return metricList, nil
-}
+// 	return metricList, nil
+// }
 
-func getJobStatsIOMetrics(jobBlock string, jobID string, promName string, helpText string) (metricList []lustreJobsMetric, err error) {
-	// opMap matches the given helpText value with the placement of the numeric fields within each metric line.
-	// For example, the number of samples is the first number in the line and has a helpText of readSamplesHelp,
-	// hence the 'index' value of 0. 'pattern' is the regex capture pattern for the desired line.
-	opMap := map[string]multistatParsingStruct{
-		readSamplesHelp:  {index: 0, pattern: "read_bytes"},
-		readMinimumHelp:  {index: 1, pattern: "read_bytes"},
-		readMaximumHelp:  {index: 2, pattern: "read_bytes"},
-		readTotalHelp:    {index: 3, pattern: "read_bytes"},
-		writeSamplesHelp: {index: 0, pattern: "write_bytes"},
-		writeMinimumHelp: {index: 1, pattern: "write_bytes"},
-		writeMaximumHelp: {index: 2, pattern: "write_bytes"},
-		writeTotalHelp:   {index: 3, pattern: "write_bytes"},
-	}
-	// If the metric isn't located in the map, don't try to parse a value for it.
-	if _, exists := opMap[helpText]; !exists {
-		return nil, nil
-	}
-	pattern := opMap[helpText].pattern
-	opStat := regexCaptureString(pattern+": .*", jobBlock)
-	opNumbers := regexCaptureNumbers(opStat)
-	if len(opNumbers) < 1 {
-		return nil, nil
-	}
-	result, err := strconv.ParseFloat(strings.TrimSpace(opNumbers[opMap[helpText].index]), 64)
-	if err != nil {
-		return nil, err
-	}
-	if result == 0 {
-		return nil, nil
-	}
-	metricList = append(metricList,
-		lustreJobsMetric{jobID: jobID,
-			lustreStatsMetric: *newLustreStatsMetric(promName, helpText, result, "", ""),
-		})
+// func getJobStatsIOMetrics(jobBlock string, jobID string, promName string, helpText string) (metricList []lustreJobsMetric, err error) {
+// 	// opMap matches the given helpText value with the placement of the numeric fields within each metric line.
+// 	// For example, the number of samples is the first number in the line and has a helpText of readSamplesHelp,
+// 	// hence the 'index' value of 0. 'pattern' is the regex capture pattern for the desired line.
+// 	opMap := map[string]multistatParsingStruct{
+// 		readSamplesHelp:  {index: 0, pattern: "read_bytes"},
+// 		readMinimumHelp:  {index: 1, pattern: "read_bytes"},
+// 		readMaximumHelp:  {index: 2, pattern: "read_bytes"},
+// 		readTotalHelp:    {index: 3, pattern: "read_bytes"},
+// 		writeSamplesHelp: {index: 0, pattern: "write_bytes"},
+// 		writeMinimumHelp: {index: 1, pattern: "write_bytes"},
+// 		writeMaximumHelp: {index: 2, pattern: "write_bytes"},
+// 		writeTotalHelp:   {index: 3, pattern: "write_bytes"},
+// 	}
+// 	// If the metric isn't located in the map, don't try to parse a value for it.
+// 	if _, exists := opMap[helpText]; !exists {
+// 		return nil, nil
+// 	}
+// 	pattern := opMap[helpText].pattern
+// 	opStat := regexCaptureString(pattern+": .*", jobBlock)
+// 	opNumbers := regexCaptureNumbers(opStat)
+// 	if len(opNumbers) < 1 {
+// 		return nil, nil
+// 	}
+// 	result, err := strconv.ParseFloat(strings.TrimSpace(opNumbers[opMap[helpText].index]), 64)
+// 	if err != nil {
+// 		return nil, err
+// 	}
+// 	if result == 0 {
+// 		return nil, nil
+// 	}
+// 	metricList = append(metricList,
+// 		lustreJobsMetric{jobID: jobID,
+// 			lustreStatsMetric: *newLustreStatsMetric(promName, helpText, result, "", ""),
+// 		})
 
-	return metricList, err
-}
+// 	return metricList, err
+// }
 
-func getJobNum(jobBlock string) (jobID string, err error) {
-	jobID = regexCaptureJobid(jobBlock)
-	if jobID == "" {
-		return "", errors.New("No valid jobid found in block: " + jobBlock)
-	}
-	return strings.TrimSpace(jobID), nil
-}
+// func getJobNum(jobBlock string) (jobID string, err error) {
+// 	jobID = regexCaptureJobid(jobBlock)
+// 	if jobID == "" {
+// 		return "", errors.New("No valid jobid found in block: " + jobBlock)
+// 	}
+// 	return strings.TrimSpace(jobID), nil
+// }
 
-func getJobStatsOperationMetrics(jobBlock string, jobID string, promName string, helpText string) (metricList []lustreJobsMetric, err error) {
-	operationSlice := []multistatParsingStruct{
-		{index: 0, pattern: "open"},
-		{index: 0, pattern: "close"},
-		{index: 0, pattern: "mknod"},
-		{index: 0, pattern: "link"},
-		{index: 0, pattern: "unlink"},
-		{index: 0, pattern: "mkdir"},
-		{index: 0, pattern: "rmdir"},
-		{index: 0, pattern: "rename"},
-		{index: 0, pattern: "getattr"},
-		{index: 0, pattern: "setattr"},
-		{index: 0, pattern: "getxattr"},
-		{index: 0, pattern: "setxattr"},
-		{index: 0, pattern: "statfs"},
-		{index: 0, pattern: "sync"},
-		{index: 0, pattern: "samedir_rename"},
-		{index: 0, pattern: "crossdir_rename"},
-		{index: 0, pattern: "punch"},
-		{index: 0, pattern: "destroy"},
-		{index: 0, pattern: "create"},
-		{index: 0, pattern: "get_info"},
-		{index: 0, pattern: "set_info"},
-		{index: 0, pattern: "quotactl"},
-	}
-	for _, operation := range operationSlice {
-		opStat := regexCaptureString(operation.pattern+": .*", jobBlock)
-		opNumbers := regexCaptureStrings("[0-9]*\\.[0-9]+|[0-9]+", opStat)
-		if len(opNumbers) < 1 {
-			continue
-		}
-		var result float64
-		result, err = strconv.ParseFloat(strings.TrimSpace(opNumbers[operation.index]), 64)
-		if err != nil {
-			return nil, err
-		}
-		if result == 0 {
-			continue
-		}
-		metricList = append(metricList,
-			lustreJobsMetric{jobID: jobID,
-				lustreStatsMetric: *newLustreStatsMetric(promName, helpText, result, "operation", operation.pattern),
-			})
-	}
-	return metricList, err
-}
+// func getJobStatsOperationMetrics(jobBlock string, jobID string, promName string, helpText string) (metricList []lustreJobsMetric, err error) {
+// 	operationSlice := []multistatParsingStruct{
+// 		{index: 0, pattern: "open"},
+// 		{index: 0, pattern: "close"},
+// 		{index: 0, pattern: "mknod"},
+// 		{index: 0, pattern: "link"},
+// 		{index: 0, pattern: "unlink"},
+// 		{index: 0, pattern: "mkdir"},
+// 		{index: 0, pattern: "rmdir"},
+// 		{index: 0, pattern: "rename"},
+// 		{index: 0, pattern: "getattr"},
+// 		{index: 0, pattern: "setattr"},
+// 		{index: 0, pattern: "getxattr"},
+// 		{index: 0, pattern: "setxattr"},
+// 		{index: 0, pattern: "statfs"},
+// 		{index: 0, pattern: "sync"},
+// 		{index: 0, pattern: "samedir_rename"},
+// 		{index: 0, pattern: "crossdir_rename"},
+// 		{index: 0, pattern: "punch"},
+// 		{index: 0, pattern: "destroy"},
+// 		{index: 0, pattern: "create"},
+// 		{index: 0, pattern: "get_info"},
+// 		{index: 0, pattern: "set_info"},
+// 		{index: 0, pattern: "quotactl"},
+// 	}
+// 	for _, operation := range operationSlice {
+// 		opStat := regexCaptureString(operation.pattern+": .*", jobBlock)
+// 		opNumbers := regexCaptureStrings("[0-9]*\\.[0-9]+|[0-9]+", opStat)
+// 		if len(opNumbers) < 1 {
+// 			continue
+// 		}
+// 		var result float64
+// 		result, err = strconv.ParseFloat(strings.TrimSpace(opNumbers[operation.index]), 64)
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		if result == 0 {
+// 			continue
+// 		}
+// 		metricList = append(metricList,
+// 			lustreJobsMetric{jobID: jobID,
+// 				lustreStatsMetric: *newLustreStatsMetric(promName, helpText, result, "operation", operation.pattern),
+// 			})
+// 	}
+// 	return metricList, err
+// }
 
-func parseJobStatsText(jobStats string, promName string, helpText string, hasMultipleVals bool) (metricList []lustreJobsMetric, err error) {
-	jobs := regexCaptureJobStats(jobStats)
-	if len(jobs) < 1 {
-		return nil, nil
-	}
-	var jobList []lustreJobsMetric
-	for _, job := range jobs {
-		jobID, err := getJobNum(job)
-		if err != nil {
-			log.Error(err)
-			continue
-		}
-		if hasMultipleVals {
-			jobList, err = getJobStatsOperationMetrics(job, jobID, promName, helpText)
-		} else {
-			jobList, err = getJobStatsIOMetrics(job, jobID, promName, helpText)
-		}
-		if err != nil {
-			return nil, err
-		}
-		if jobList != nil {
-			metricList = append(metricList, jobList...)
-		}
-	}
-	return metricList, nil
-}
+// func parseJobStatsText(jobStats string, promName string, helpText string, hasMultipleVals bool) (metricList []lustreJobsMetric, err error) {
+// 	jobs := regexCaptureJobStats(jobStats)
+// 	if len(jobs) < 1 {
+// 		return nil, nil
+// 	}
+// 	var jobList []lustreJobsMetric
+// 	for _, job := range jobs {
+// 		jobID, err := getJobNum(job)
+// 		if err != nil {
+// 			log.Error(err)
+// 			continue
+// 		}
+// 		if hasMultipleVals {
+// 			jobList, err = getJobStatsOperationMetrics(job, jobID, promName, helpText)
+// 		} else {
+// 			jobList, err = getJobStatsIOMetrics(job, jobID, promName, helpText)
+// 		}
+// 		if err != nil {
+// 			return nil, err
+// 		}
+// 		if jobList != nil {
+// 			metricList = append(metricList, jobList...)
+// 		}
+// 	}
+// 	return metricList, nil
+// }
 
 func (s *LustreSysFsSource) parseJobStats(nodeType string, metricType string, path string, directoryDepth int, helpText string, promName string, hasMultipleVals bool, handler func(string, string, string, string, string, float64, string, string)) (err error) {
 	_, nodeName, err := parseFileElements(path, directoryDepth)
